@@ -1,0 +1,580 @@
+/**
+ * Loading Screen System: custom screens.
+ * Fork notice (Apache-2.0 §4b): added in 2026 by Drakul for Foundry VTT v14. The full-screen media overlay, the hint that
+ * turns refused sound on, the GM's stop button, the hidden-interface mode, the scene tab state and the management
+ * window with its segment bars and timeline. Loaded by the module script into the modules cascade layer, with a
+ * version in the URL.
+ */
+
+/* ============================================
+   OVERLAY
+   ============================================ */
+
+/* Opacity is animated from the script, so a fade-out can start from wherever the fade-in is. The overlay sits above
+   the canvas, the interface and the input shield (9000), and below the Cinematic Cut-ins overlay (10000), so cut-ins
+   played by the screen's macros show over its black. */
+#loading-screen-overlay.ls-custom,
+#loading-screen-overlay.ls-custom.fade-out {
+  z-index: 9500;
+  animation: none;
+  background: #000;
+}
+
+#loading-screen-overlay.ls-custom .ls-custom-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #000 center / cover no-repeat;
+  transition: opacity 0.12s linear;
+}
+
+#loading-screen-overlay.ls-custom.ls-custom-skippable {
+  cursor: pointer;
+}
+
+/* Blink reveal: the overlay stays opaque while its background clears; a black layer with a soft elliptical hole covers
+   the scene, and the script animates the hole's size (--ls-eye-w, --ls-eye-h, registered as percentages so they
+   interpolate) so it opens like an eye, while a blur on the canvas element clears. */
+#loading-screen-overlay.ls-custom.ls-blink {
+  overflow: hidden;
+  background: transparent;
+}
+
+#loading-screen-overlay.ls-custom.ls-blink > :not(.ls-eyelids) {
+  visibility: hidden;
+}
+
+#loading-screen-overlay.ls-custom .ls-eyelids {
+  --ls-eye-w: 70%;
+  --ls-eye-h: 0%;
+  position: absolute;
+  inset: 0;
+  background: #000;
+  mask-image: radial-gradient(ellipse var(--ls-eye-w) var(--ls-eye-h) at 50% 50%, transparent 70%, #000 100%);
+}
+
+/* Offered when the browser refused to start the sound; stays above the overlay and after it */
+#ls-custom-sound {
+  position: fixed;
+  left: 50%;
+  bottom: clamp(1.25rem, 5vh, 3.5rem);
+  z-index: 100000;
+  translate: -50% 0;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 1.1rem;
+  border: 1px solid rgba(235, 229, 217, 0.14);
+  border-radius: 999px;
+  background: rgba(12, 10, 9, 0.66);
+  color: rgba(235, 229, 217, 0.72);
+  font-family: "Signika", "Palatino Linotype", serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  user-select: none;
+  animation: ls-cs-appear 0.6s ease both;
+}
+
+@keyframes ls-cs-appear {
+  from { opacity: 0; }
+}
+
+/* GM only, above everything while a custom screen plays: purple like Foundry secrets, no label */
+#ls-custom-stop {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 100001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 1px solid #5f4b7d;
+  border-radius: 6px;
+  background: rgba(92, 62, 140, 0.55);
+  box-shadow: none;
+  color: #c3b5d8;
+  font-size: 0.95rem;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.75;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+  animation: ls-cs-appear 0.6s ease both;
+}
+
+#ls-custom-stop:hover,
+#ls-custom-stop:focus-visible {
+  opacity: 1;
+  background: rgba(92, 62, 140, 0.85);
+  color: #e4daf0;
+  outline: none;
+}
+
+/* ============================================
+   HIDDEN INTERFACE
+   ============================================ */
+
+/* Interface hidden while a custom screen plays; the shield takes the clicks */
+body.ls-cine-ui :is(#ui-left, #ui-middle, #ui-right, #visual-active-effects, #hud, #pause, #fast-tooltip, #bg3-hotbar,
+  #combat-turn-message, #custom-dnd5e-cursor-label, #nd5t-cursor-hint, .chat-filter-panel, .njb-video-dock,
+  .njb-listen-live, .application, .app.window-app) {
+  animation: ls-ui-out 0.5s ease forwards !important;
+  pointer-events: none !important;
+}
+
+body.ls-cine-ui-back :is(#ui-left, #ui-middle, #ui-right, #visual-active-effects, #hud, #pause, #fast-tooltip,
+  #bg3-hotbar, #combat-turn-message, #custom-dnd5e-cursor-label, #nd5t-cursor-hint, .chat-filter-panel, .njb-video-dock,
+  .njb-listen-live, .application, .app.window-app) {
+  animation: ls-ui-in 0.6s ease both;
+}
+
+@keyframes ls-ui-out {
+  to { opacity: 0; }
+}
+
+@keyframes ls-ui-in {
+  from { opacity: 0; }
+}
+
+#ls-cine-shield {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  cursor: none;
+}
+
+/* The GM keeps the pointer, to reach the stop button */
+#ls-cine-shield.ls-cine-gm {
+  cursor: auto;
+}
+
+/* ============================================
+   SCENE TAB
+   ============================================ */
+
+.scene-config .tab[data-tab="loadingScreen"].ls-custom-chosen fieldset.ls-default-only {
+  opacity: 0.55;
+}
+
+/* ============================================
+   WINDOW
+   ============================================ */
+
+.loading-screen-custom-screens {
+  --ls-cs-line: rgba(235, 229, 217, 0.12);
+  --ls-cs-soft: rgba(235, 229, 217, 0.06);
+  --ls-cs-accent: #c9a25a;
+  --ls-cs-accent-soft: rgba(201, 162, 90, 0.24);
+}
+
+.loading-screen-custom-screens .window-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.loading-screen-custom-screens .ls-cs {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 13rem minmax(0, 1fr);
+}
+
+.loading-screen-custom-screens .ls-cs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-height: 0;
+  padding: 0.75rem 0.5rem;
+  border-right: 1px solid var(--ls-cs-line);
+}
+
+.loading-screen-custom-screens .ls-cs-list ol {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.loading-screen-custom-screens .ls-cs-item {
+  width: 100%;
+  justify-content: flex-start;
+  overflow: hidden;
+  border-color: transparent;
+  background: transparent;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.loading-screen-custom-screens .ls-cs-item.active {
+  border-color: rgba(235, 229, 217, 0.22);
+  background: rgba(235, 229, 217, 0.08);
+}
+
+.loading-screen-custom-screens .ls-cs-empty {
+  padding: 0.5rem;
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.loading-screen-custom-screens .ls-cs-editor {
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0.75rem 1rem;
+}
+
+.loading-screen-custom-screens .ls-cs-head {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.loading-screen-custom-screens .ls-cs-head input[name="name"] {
+  flex: 1;
+  font-size: 1.1em;
+}
+
+.loading-screen-custom-screens button.icon {
+  flex: none;
+  width: 2rem;
+  min-width: 2rem;
+  padding: 0;
+}
+
+/* Two short fields on one row, each with a small label */
+.loading-screen-custom-screens .ls-cs-pair {
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.loading-screen-custom-screens .ls-cs-pair input[type="number"],
+.loading-screen-custom-screens .ls-cs-pair input[type="text"] {
+  flex: 1 1 4.5rem;
+  min-width: 3.5rem;
+}
+
+.loading-screen-custom-screens .ls-cs-pair select {
+  flex: 2 1 8rem;
+}
+
+.loading-screen-custom-screens .ls-cs-sub {
+  flex: none;
+  font-size: 0.85em;
+  opacity: 0.75;
+  white-space: nowrap;
+}
+
+.loading-screen-custom-screens .ls-cs-scale {
+  flex: 0 0 5rem;
+}
+
+.loading-screen-custom-screens .ls-cs-macro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 9.5rem 4.5rem 2rem;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.loading-screen-custom-screens .ls-cs-macro-head {
+  font-size: 0.85em;
+  opacity: 0.75;
+}
+
+.loading-screen-custom-screens .ls-cs-add {
+  align-self: flex-start;
+}
+
+.loading-screen-custom-screens .ls-disabled {
+  opacity: 0.5;
+}
+
+.loading-screen-custom-screens [hidden] {
+  display: none !important;
+}
+
+.loading-screen-custom-screens .form-footer {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-top: 1px solid var(--ls-cs-line);
+}
+
+.loading-screen-custom-screens .form-footer button {
+  flex: 1;
+}
+
+/* ============================================
+   SEGMENT BARS
+   ============================================ */
+
+.loading-screen-custom-screens .ls-trim {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 0.75rem;
+  margin: 0.15rem 0 0.35rem;
+}
+
+.loading-screen-custom-screens .ls-trim[data-kind="music"] {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.loading-screen-custom-screens .ls-trim-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.loading-screen-custom-screens .ls-trim-track {
+  position: relative;
+  height: 2.6rem;
+  border: 1px dashed var(--ls-cs-line);
+  border-radius: 4px;
+  background: var(--ls-cs-soft);
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+}
+
+.loading-screen-custom-screens .ls-trim-ready .ls-trim-track {
+  border-style: solid;
+}
+
+.loading-screen-custom-screens .ls-trim-wave {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  color: rgba(235, 229, 217, 0.3);
+  pointer-events: none;
+}
+
+.loading-screen-custom-screens .ls-trim-range,
+.loading-screen-custom-screens .ls-trim-handle,
+.loading-screen-custom-screens .ls-trim-head {
+  display: none;
+}
+
+.loading-screen-custom-screens .ls-trim-ready .ls-trim-range,
+.loading-screen-custom-screens .ls-trim-ready .ls-trim-handle {
+  display: block;
+}
+
+.loading-screen-custom-screens .ls-trim-ready .ls-trim-head:not([hidden]) {
+  display: block;
+}
+
+.loading-screen-custom-screens .ls-trim-range {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  overflow: hidden;
+  background: var(--ls-cs-accent-soft);
+  pointer-events: none;
+}
+
+/* The shade over a fade grows toward silence */
+.loading-screen-custom-screens .ls-trim-ramp {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+
+.loading-screen-custom-screens .ls-trim-ramp-in {
+  left: 0;
+  background: linear-gradient(to right, rgba(5, 4, 3, 0.7), rgba(5, 4, 3, 0));
+}
+
+.loading-screen-custom-screens .ls-trim-ramp-out {
+  right: 0;
+  background: linear-gradient(to left, rgba(5, 4, 3, 0.7), rgba(5, 4, 3, 0));
+}
+
+.loading-screen-custom-screens .ls-trim-handle {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 10px;
+  margin-left: -5px;
+  border-radius: 3px;
+  background: var(--ls-cs-accent);
+  box-shadow: 0 0 0 1px rgba(5, 4, 3, 0.6);
+  cursor: ew-resize;
+}
+
+.loading-screen-custom-screens .ls-trim-handle:focus-visible {
+  outline: 2px solid rgba(235, 229, 217, 0.85);
+  outline-offset: 1px;
+}
+
+.loading-screen-custom-screens .ls-trim-head {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  margin-left: -1px;
+  background: rgba(235, 229, 217, 0.9);
+  pointer-events: none;
+}
+
+.loading-screen-custom-screens .ls-trim-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 1.75rem;
+}
+
+.loading-screen-custom-screens .ls-trim-row button.icon {
+  width: 1.75rem;
+  min-width: 1.75rem;
+  height: 1.75rem;
+}
+
+.loading-screen-custom-screens .ls-trim-status {
+  font-size: 0.85em;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.8;
+}
+
+.loading-screen-custom-screens .ls-trim-preview {
+  width: 9.5rem;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid var(--ls-cs-line);
+  border-radius: 4px;
+  background: #000;
+}
+
+.loading-screen-custom-screens .ls-trim-preview:empty {
+  display: none;
+}
+
+.loading-screen-custom-screens .ls-trim-video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: opacity 0.12s linear;
+}
+
+/* ============================================
+   TIMELINE
+   ============================================ */
+
+.loading-screen-custom-screens .ls-cs-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin: 0.6rem 0 0.4rem;
+}
+
+.loading-screen-custom-screens .ls-tl-lane {
+  position: relative;
+  height: 1.4rem;
+}
+
+.loading-screen-custom-screens .ls-tl-macros {
+  height: 0.8rem;
+}
+
+.loading-screen-custom-screens .ls-tl-block {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 0 0.35rem;
+  border: 1px solid var(--ls-cs-line);
+  border-radius: 3px;
+  font-size: 0.78em;
+  line-height: calc(1.4rem - 2px);
+  white-space: nowrap;
+}
+
+.loading-screen-custom-screens .ls-tl-text {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.loading-screen-custom-screens .ls-tl-video,
+.loading-screen-custom-screens .ls-tl-image {
+  background: rgba(110, 140, 180, 0.32);
+}
+
+.loading-screen-custom-screens .ls-tl-black {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.loading-screen-custom-screens .ls-tl-camera {
+  background: var(--ls-cs-accent-soft);
+}
+
+.loading-screen-custom-screens .ls-tl-hold {
+  border-style: dashed;
+  background: var(--ls-cs-soft);
+}
+
+.loading-screen-custom-screens .ls-tl-music {
+  background: rgba(125, 160, 110, 0.32);
+}
+
+.loading-screen-custom-screens .ls-tl-estimate {
+  border-right-style: dashed;
+  opacity: 0.75;
+}
+
+.loading-screen-custom-screens .ls-tl-forward {
+  border-style: dashed;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+/* The move to the screen's own scene, under the black screen at the start */
+.loading-screen-custom-screens .ls-tl-stage {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  translate: -35% -50%;
+  padding: 2px 3px;
+  border: 1px solid var(--ls-cs-line);
+  border-radius: 3px;
+  background: rgba(12, 10, 9, 0.9);
+  font-size: 0.7rem;
+  line-height: 1;
+}
+
+.loading-screen-custom-screens .ls-tl-macro {
+  position: absolute;
+  top: 1px;
+  width: 0.55rem;
+  height: 0.55rem;
+  margin-left: -0.275rem;
+  rotate: 45deg;
+  background: var(--ls-cs-accent);
+}
+
+.loading-screen-custom-screens .ls-tl-axis {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72em;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.6;
+}

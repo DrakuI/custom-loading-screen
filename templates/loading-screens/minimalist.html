@@ -1,0 +1,22 @@
+<!-- Minimalist Loading Screen Template (fork: backgrounds filled by script, tips anchored to the bottom) -->
+<div id="loading-screen-overlay" class="loading-template-minimalist">
+  <div class="ls-backgrounds"></div>
+  <div class="loading-screen-content minimalist-content">
+    <div class="minimalist-text">
+      <h1>{{#if sceneName}}{{sceneName}}{{else}}{{customText}}{{/if}}</h1>
+      {{#if showProgress}}
+      <div class="minimalist-progress">
+        <div class="minimalist-progress-bar" id="loading-progress-fill"></div>
+      </div>
+      {{/if}}
+    </div>
+  </div>
+  {{#if showTips}}
+  <footer class="ls-tips">
+    <div class="ls-tip">
+      <p id="loading-tip-text" class="ls-tip-text">{{currentTip}}</p>
+    </div>
+  </footer>
+  {{/if}}
+  <div class="ls-skip-hint">{{labels.skip}}</div>
+</div>

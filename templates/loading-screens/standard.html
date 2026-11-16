@@ -1,0 +1,27 @@
+<!-- Standard Loading Screen Template (fork: backgrounds filled by script, tips anchored to the bottom) -->
+<div id="loading-screen-overlay" class="loading-template-standard">
+  <div class="ls-backgrounds"></div>
+  <div class="ls-shade"></div>
+  <div class="loading-screen-content">
+    <div class="loading-screen-text">
+      {{#if customText}}<h1>{{customText}}</h1>{{/if}}
+      {{#if sceneName}}<p class="scene-name">{{sceneName}}</p>{{/if}}
+    </div>
+    {{#if showProgress}}
+    <div class="loading-screen-progress">
+      <div class="progress-bar">
+        <div class="progress-fill" id="loading-progress-fill"></div>
+      </div>
+    </div>
+    {{/if}}
+  </div>
+  {{#if showTips}}
+  <footer class="ls-tips">
+    <div class="ls-tip">
+      <i class="ls-tip-icon fa-solid fa-lightbulb" inert></i>
+      <p id="loading-tip-text" class="ls-tip-text">{{currentTip}}</p>
+    </div>
+  </footer>
+  {{/if}}
+  <div class="ls-skip-hint">{{labels.skip}}</div>
+</div>

@@ -1,0 +1,48 @@
+<div class="tab scrollable{{#if tab.active}} active{{/if}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
+  <p class="hint">{{localize "LOADING_SCREEN.SceneTabDescription"}}</p>
+
+  <fieldset>
+    <legend>{{localize "LOADING_SCREEN.SceneScreenLegend"}}</legend>
+    <div class="form-group">
+      <label>{{localize "LOADING_SCREEN.SceneScreen"}}</label>
+      <div class="form-fields">
+        <select name="flags.custom-loading-screen.screen">
+          {{selectOptions (lsCustomScreens) selected=(lsSceneFlag document "screen") blank=(localize "LOADING_SCREEN.SceneScreenDefault")}}
+        </select>
+      </div>
+      <p class="hint">{{localize "LOADING_SCREEN.SceneScreenHint"}}</p>
+    </div>
+  </fieldset>
+
+  <fieldset class="ls-default-only">
+    <legend>{{localize "LOADING_SCREEN.SceneImagesLegend"}}</legend>
+    <div class="form-group">
+      <label>{{localize "LOADING_SCREEN.SceneImageFolder"}}</label>
+      <div class="form-fields">
+        <file-picker name="flags.custom-loading-screen.images" type="folder" value="{{lsSceneFlag document "images"}}"
+                     placeholder="{{#if (lsSetting "imageFolder")}}{{lsSetting "imageFolder"}}{{else}}{{localize "LOADING_SCREEN.UseDefaultFolder"}}{{/if}}"></file-picker>
+      </div>
+      <p class="hint">{{localize "LOADING_SCREEN.SceneImageFolderHint"}}</p>
+    </div>
+  </fieldset>
+
+  <fieldset class="ls-default-only">
+    <legend>{{localize "LOADING_SCREEN.SceneMusicLegend"}}</legend>
+    <div class="form-group">
+      <label>{{localize "LOADING_SCREEN.SceneSoundMode"}}</label>
+      <div class="form-fields">
+        <select name="flags.custom-loading-screen.soundMode">
+          {{selectOptions (lsSoundModes) selected=(lsSceneFlag document "soundMode") localize=true}}
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>{{localize "LOADING_SCREEN.SceneSound"}}</label>
+      <div class="form-fields">
+        <file-picker name="flags.custom-loading-screen.sound" type="audio" value="{{lsSceneFlag document "sound"}}"
+                     placeholder="{{#if (lsSetting "sound")}}{{lsSetting "sound"}}{{else}}{{localize "LOADING_SCREEN.SceneSoundPlaceholder"}}{{/if}}"></file-picker>
+      </div>
+      <p class="hint">{{localize "LOADING_SCREEN.SceneSoundHint"}}</p>
+    </div>
+  </fieldset>
+</div>

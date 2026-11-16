@@ -1,0 +1,48 @@
+{
+  "id": "custom-loading-screen",
+  "title": "Custom Loading Screen",
+  "description": "Shows a loading screen while a new scene is loading. With tips, music, background images, wildcard support, and a brand new cinematic custom loading screen.",
+  "version": "1.0.0",
+  "authors": [
+    {
+      "name": "Drakul",
+      "url": "https://github.com/DrakuI"
+    },
+    {
+      "name": "NoWitchCraft",
+      "discord": "nowitchcraft"
+    }
+  ],
+  "url": "https://github.com/DrakuI/custom-loading-screen",
+  "manifest": "https://github.com/DrakuI/custom-loading-screen/releases/latest/download/module.json",
+  "download": "https://github.com/DrakuI/custom-loading-screen/releases/download/v1.0.0/module.zip",
+  "bugs": "https://github.com/DrakuI/custom-loading-screen/issues",
+  "readme": "https://github.com/DrakuI/custom-loading-screen/blob/main/README.md",
+  "license": "LICENSE",
+  "compatibility": {
+    "minimum": "14",
+    "verified": "14.369"
+  },
+  "relationships": {
+    "conflicts": [
+      {
+        "id": "loading-screen",
+        "type": "module",
+        "reason": "Same feature set; this package is a fork of it."
+      }
+    ]
+  },
+  "esmodules": [
+    "scripts/loading-screen.js"
+  ],
+  "styles": [
+    "styles/loading-screen.css"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ]
+}

@@ -1,0 +1,381 @@
+<div class="ls-cs">
+  <aside class="ls-cs-list">
+    <ol>
+      {{#each screens}}
+      <li>
+        <button type="button" class="ls-cs-item{{#if active}} active{{/if}}" data-action="select" data-id="{{id}}">{{label}}</button>
+      </li>
+      {{else}}
+      <li class="ls-cs-empty">{{localize "LOADING_SCREEN.Custom.Empty"}}</li>
+      {{/each}}
+    </ol>
+    <button type="button" class="ls-cs-new" data-action="create">
+      <i class="fa-solid fa-plus" inert></i> {{localize "LOADING_SCREEN.Custom.New"}}
+    </button>
+  </aside>
+
+  <section class="ls-cs-editor standard-form">
+    {{#if current}}
+    <div class="ls-cs-head">
+      <input type="text" name="name" value="{{current.name}}" placeholder="{{localize "LOADING_SCREEN.Custom.Untitled"}}"
+             aria-label="{{localize "LOADING_SCREEN.Custom.Name"}}">
+      <button type="button" class="icon" data-action="duplicate" data-tooltip="LOADING_SCREEN.Custom.Duplicate"
+              aria-label="{{localize "LOADING_SCREEN.Custom.Duplicate"}}"><i class="fa-solid fa-copy" inert></i></button>
+      <button type="button" class="icon" data-action="delete" data-tooltip="LOADING_SCREEN.Custom.Delete"
+              aria-label="{{localize "LOADING_SCREEN.Custom.Delete"}}"><i class="fa-solid fa-trash" inert></i></button>
+    </div>
+
+    <div class="ls-cs-timeline" role="img" aria-label="{{localize "LOADING_SCREEN.Custom.Timeline.label"}}"></div>
+
+    <fieldset>
+      <legend>{{localize "LOADING_SCREEN.Custom.ScreenLegend"}}</legend>
+      <div class="form-group">
+        <label>{{localize "LOADING_SCREEN.Custom.Fade"}}</label>
+        <div class="form-fields ls-cs-pair">
+          <span class="ls-cs-sub">{{localize "LOADING_SCREEN.Custom.FadeIn"}}</span>
+          <input type="number" name="fadeIn" value="{{current.fadeIn}}" min="0" max="30" step="0.1"
+                 aria-label="{{localize "LOADING_SCREEN.Custom.FadeIn"}}">
+          <span class="ls-cs-sub">{{localize "LOADING_SCREEN.Custom.FadeOut"}}</span>
+          <input type="number" name="fadeOut" value="{{current.fadeOut}}" min="0" max="30" step="0.1"
+                 aria-label="{{localize "LOADING_SCREEN.Custom.FadeOut"}}">
+        </div>
+        <p class="hint">{{localize "LOADING_SCREEN.Custom.FadeHint"}}</p>
+      </div>
+      <div class="form-group ls-cs-shown">
+        <label>{{localize "LOADING_SCREEN.Custom.Duration"}}</label>
+        <div class="form-fields">
+          <input type="number" name="duration" value="{{#if current.duration}}{{current.duration}}{{/if}}" min="0"
+                 max="3600" step="0.5">
+        </div>
+        <p class="hint">{{localize "LOADING_SCREEN.Custom.DurationHint"}}</p>
+      </div>
+      <div class="form-group">
+        <label>{{localize "LOADING_SCREEN.Custom.StageScene"}}</label>
+        <div class="form-fields">
+          <select name="scene">
+            {{selectOptions sceneChoices selected=current.scene blank=(localize "LOADING_SCREEN.Custom.StageSceneNone")}}
+          </select>
+        </div>
+        <p class="hint">{{localize "LOADING_SCREEN.Custom.StageSceneHint"}}</p>
+      </div>
+      <div class="form-group">
+        <label>{{localize "LOADING_SCREEN.Custom.Destination"}}</label>
+        <div class="form-fields">
+          <select name="destination">
+            {{selectOptions sceneChoices selected=current.destination blank=(localize "LOADING_SCREEN.Custom.DestinationNone")}}
+          </select>
+        </div>
+        <p class="hint">{{localize "LOADING_SCREEN.Custom.DestinationHint"}}</p>
+      </div>
+      <div class="form-group ls-cs-showstage">
+        <label>{{localize "LOADING_SCREEN.Custom.ShowStage"}}</label>
+        <div class="form-fields">
+          <input type="checkbox" name="showStage" {{checked current.showStage}}>
+        </div>
+        <p class="hint">{{localize "LOADING_SCREEN.Custom.ShowStageHint"}}</p>
+      </div>
+      <div class="form-group">
+        <label>{{localize "LOADING_SCREEN.Custom.Cover"}}</label>
+        <div class="form-fields">
+          <select name="cover.style">
+            {{selectOptions revealChoices selected=current.cover.style localize=true}}
+          </select>
+        </div>
+        <p class="hint">{{localize "LOADING_SCREEN.Custom.CoverHint"}}</p>
+      </div>
+      <div class="form-group ls-cs-cover-blink">
+        <label>{{localize "LOADING_SCREEN.Custom.Blink"}}</label>
+        <div class="form-fields ls-cs-pair">
+          <span class="ls-cs-sub">{{localize "LOADING_SCREEN.Custom.BlinkCount"}}</span>
+          <input type="number" name="cover.blinks" value="{{current.cover.blinks}}" min="1" max="5" step="1"
+                 aria-label="{{localize "LOADING_SCREEN.Custom.BlinkCount"}}">
+          <span class="ls-cs-sub">{{localize "LOADING_SCREEN.Custom.BlinkDuration"}}</span>
+          <input type="number" name="cover.duration" value="{{current.cover.duration}}" min="1" max="30" step="0.1"
+                 aria-label="{{localize "LOADING_SCREEN.Custom.BlinkDuration"}}">
+          <span class="ls-cs-sub">{{localize "LOADING_SCREEN.Custom.BlinkBlur"}}</span>
+          <input type="number" name="cover.blur" value="{{current.cover.blur}}" min="0" max="40" step="1"
+                 aria-label="{{localize "LOADING_SCREEN.Custom.BlinkBlur"}}">
+        </div>
+        <p class="hint">{{localize "LOADING_SCREEN.Custom.CoverBlinkHint"}}</p>
+      </div>
+      <div class="form-group">
+        <label>{{localize "LOADING_SCREEN.Custom.Reveal"}}</label>
+        <div class="form-fields">
+          <select name="reveal.style">
+            {{selectOptions revealChoices selected=current.reveal.style localize=true}}
+          </select>
+        </div>
+        <p class="hint">{{localize "LOADING_SCREEN.Custom.RevealHint"}}</p>
+      </div>
+      <div class="form-group ls-cs-blink">
+        <label>{{localize "LOADING_SCREEN.Custom.Blink"}}</label>
+        <div class="form-fields ls-cs-pair">
+          <span class="ls-cs-sub">{{localize "LOADING_SCREEN.Custom.BlinkCount"}}</span>
+          <input type="number" name="reveal.blinks" value="{{current.reveal.blinks}}" min="1" max="5" step="1"
+                 aria-label="{{localize "LOADING_SCREEN.Custom.BlinkCount"}}">
+          <span class="ls-cs-sub">{{localize "LOADING_SCREEN.Custom.BlinkDuration"}}</span>
+          <input type="number" name="reveal.duration" value="{{current.reveal.duration}}" min="1" max="30" step="0.1"
+                 aria-label="{{localize "LOADING_SCREEN.Custom.BlinkDuration"}}">
+          <span class="ls-cs-sub">{{localize "LOADING_SCREEN.Custom.BlinkBlur"}}</span>
+          <input type="number" name="reveal.blur" value="{{current.reveal.blur}}" min="0" max="40" step="1"
+                 aria-label="{{localize "LOADING_SCREEN.Custom.BlinkBlur"}}">
+        </div>
+        <p class="hint">{{localize "LOADING_SCREEN.Custom.BlinkHint"}}</p>
+      </div>
+      <div class="form-group">
+        <label>{{localize "LOADING_SCREEN.Custom.Skippable"}}</label>
+        <div class="form-fields">
+          <input type="checkbox" name="skippable" {{checked current.skippable}}>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>{{localize "LOADING_SCREEN.Custom.FirstLoad"}}</label>
+        <div class="form-fields">
+          <input type="checkbox" name="firstLoad" {{checked current.firstLoad}}>
+        </div>
+        <p class="hint">{{localize "LOADING_SCREEN.Custom.FirstLoadHint"}}</p>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>{{localize "LOADING_SCREEN.Custom.MediaLegend"}}</legend>
+      <div class="form-group">
+        <label>{{localize "LOADING_SCREEN.Custom.MediaEnabled"}}</label>
+        <div class="form-fields">
+          <input type="checkbox" name="media.enabled" {{checked current.media.enabled}}>
+        </div>
+      </div>
+      <div class="ls-cs-media-fields">
+        <div class="form-group">
+          <label>{{localize "LOADING_SCREEN.Custom.Media"}}</label>
+          <div class="form-fields">
+            <file-picker name="media.src" type="imagevideo" value="{{current.media.src}}"></file-picker>
+          </div>
+        </div>
+        <div class="form-group ls-cs-video-only">
+          <label>{{localize "LOADING_SCREEN.Custom.Volume"}}</label>
+          <div class="form-fields">
+            <range-picker name="media.volume" value="{{current.media.volume}}" min="0" max="1" step="0.05"></range-picker>
+          </div>
+          <p class="hint">{{localize "LOADING_SCREEN.Custom.VolumeHint"}}</p>
+        </div>
+        <div class="ls-trim ls-cs-video-only" data-kind="media">
+          <div class="ls-trim-main">
+            <div class="ls-trim-track"></div>
+            <div class="ls-trim-row">
+              <button type="button" class="icon ls-trim-play" disabled data-tooltip="LOADING_SCREEN.Custom.TrimPlay"
+                      aria-label="{{localize "LOADING_SCREEN.Custom.TrimPlay"}}"><i class="fa-solid fa-play" inert></i></button>
+              <span class="ls-trim-status"></span>
+            </div>
+          </div>
+          <div class="ls-trim-preview"></div>
+        </div>
+        <div class="form-group ls-cs-video-only">
+          <label>{{localize "LOADING_SCREEN.Custom.Segment"}}</label>
+          <div class="form-fields ls-cs-pair">
+            <span class="ls-cs-sub">{{localize "LOADING_SCREEN.Custom.SegmentStart"}}</span>
+            <input type="text" name="media.start" value="{{times.mediaStart}}" placeholder="0:00.0" inputmode="decimal"
+                   aria-label="{{localize "LOADING_SCREEN.Custom.SegmentStart"}}">
+            <span class="ls-cs-sub">{{localize "LOADING_SCREEN.Custom.SegmentEnd"}}</span>
+            <input type="text" name="media.end" value="{{times.mediaEnd}}" inputmode="decimal"
+                   placeholder="{{localize "LOADING_SCREEN.Custom.SegmentEndPlaceholder"}}"
+                   aria-label="{{localize "LOADING_SCREEN.Custom.SegmentEnd"}}">
+          </div>
+        </div>
+        <div class="form-group ls-cs-picture-only">
+          <label>{{localize "LOADING_SCREEN.Custom.Fade"}}</label>
+          <div class="form-fields ls-cs-pair">
+            <span class="ls-cs-sub">{{localize "LOADING_SCREEN.Custom.FadeIn"}}</span>
+            <input type="number" name="media.fadeIn" value="{{current.media.fadeIn}}" min="0" max="60" step="0.1"
+                   aria-label="{{localize "LOADING_SCREEN.Custom.FadeIn"}}">
+            <span class="ls-cs-sub">{{localize "LOADING_SCREEN.Custom.FadeOut"}}</span>
+            <input type="number" name="media.fadeOut" value="{{current.media.fadeOut}}" min="0" max="60" step="0.1"
+                   aria-label="{{localize "LOADING_SCREEN.Custom.FadeOut"}}">
+          </div>
+          <p class="hint">{{localize "LOADING_SCREEN.Custom.MediaFadeHint"}}</p>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>{{localize "LOADING_SCREEN.Custom.MusicLegend"}}</legend>
+      <div class="form-group">
+        <label>{{localize "LOADING_SCREEN.Custom.MusicEnabled"}}</label>
+        <div class="form-fields">
+          <input type="checkbox" name="music.enabled" {{checked current.music.enabled}}>
+        </div>
+      </div>
+      <div class="ls-cs-music-fields">
+        <div class="form-group">
+          <label>{{localize "LOADING_SCREEN.Custom.Media"}}</label>
+          <div class="form-fields">
+            <file-picker name="music.src" type="audio" value="{{current.music.src}}"></file-picker>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>{{localize "LOADING_SCREEN.Custom.MusicVolume"}}</label>
+          <div class="form-fields">
+            <range-picker name="music.volume" value="{{current.music.volume}}" min="0" max="1" step="0.05"></range-picker>
+          </div>
+          <p class="hint">{{localize "LOADING_SCREEN.Custom.VolumeHint"}}</p>
+        </div>
+        <div class="ls-trim" data-kind="music">
+          <div class="ls-trim-main">
+            <div class="ls-trim-track"></div>
+            <div class="ls-trim-row">
+              <button type="button" class="icon ls-trim-play" disabled data-tooltip="LOADING_SCREEN.Custom.TrimPlay"
+                      aria-label="{{localize "LOADING_SCREEN.Custom.TrimPlay"}}"><i class="fa-solid fa-play" inert></i></button>
+              <span class="ls-trim-status"></span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>{{localize "LOADING_SCREEN.Custom.Segment"}}</label>
+          <div class="form-fields ls-cs-pair">
+            <span class="ls-cs-sub">{{localize "LOADING_SCREEN.Custom.SegmentStart"}}</span>
+            <input type="text" name="music.start" value="{{times.musicStart}}" placeholder="0:00.0" inputmode="decimal"
+                   aria-label="{{localize "LOADING_SCREEN.Custom.SegmentStart"}}">
+            <span class="ls-cs-sub">{{localize "LOADING_SCREEN.Custom.SegmentEnd"}}</span>
+            <input type="text" name="music.end" value="{{times.musicEnd}}" inputmode="decimal"
+                   placeholder="{{localize "LOADING_SCREEN.Custom.SegmentEndPlaceholder"}}"
+                   aria-label="{{localize "LOADING_SCREEN.Custom.SegmentEnd"}}">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>{{localize "LOADING_SCREEN.Custom.Fade"}}</label>
+          <div class="form-fields ls-cs-pair">
+            <span class="ls-cs-sub">{{localize "LOADING_SCREEN.Custom.FadeIn"}}</span>
+            <input type="number" name="music.fadeIn" value="{{current.music.fadeIn}}" min="0" max="60" step="0.1"
+                   aria-label="{{localize "LOADING_SCREEN.Custom.FadeIn"}}">
+            <span class="ls-cs-sub">{{localize "LOADING_SCREEN.Custom.FadeOut"}}</span>
+            <input type="number" name="music.fadeOut" value="{{current.music.fadeOut}}" min="0" max="60" step="0.1"
+                   aria-label="{{localize "LOADING_SCREEN.Custom.FadeOut"}}">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>{{localize "LOADING_SCREEN.Custom.MusicWhen"}}</label>
+          <div class="form-fields ls-cs-pair">
+            <select name="music.when" aria-label="{{localize "LOADING_SCREEN.Custom.MusicWhen"}}">
+              {{selectOptions labels.moments selected=current.music.when localize=true}}
+            </select>
+            <span class="ls-cs-sub">+</span>
+            <input type="number" name="music.delay" value="{{current.music.delay}}" min="0" max="600" step="0.5"
+                   aria-label="{{localize "LOADING_SCREEN.Custom.MusicDelay"}}" data-tooltip="LOADING_SCREEN.Custom.MusicDelay">
+            <span class="ls-cs-sub">s</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>{{localize "LOADING_SCREEN.Custom.MusicEnd"}}</label>
+          <div class="form-fields">
+            <select name="music.onEnd">
+              {{selectOptions labels.musicEnds selected=current.music.onEnd localize=true}}
+            </select>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>{{localize "LOADING_SCREEN.Custom.CameraLegend"}}</legend>
+      <div class="form-group">
+        <label>{{localize "LOADING_SCREEN.Custom.CameraEnabled"}}</label>
+        <div class="form-fields">
+          <input type="checkbox" name="camera.enabled" {{checked current.camera.enabled}}>
+        </div>
+      </div>
+      <div class="ls-cs-camera-fields">
+        <div class="form-group">
+          <label>{{localize "LOADING_SCREEN.Custom.CameraFrom"}}</label>
+          <div class="form-fields">
+            <select name="camera.from">
+              {{selectOptions labels.anchors selected=current.camera.from localize=true}}
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>{{localize "LOADING_SCREEN.Custom.CameraTo"}}</label>
+          <div class="form-fields">
+            <select name="camera.to">
+              {{selectOptions labels.anchors selected=current.camera.to localize=true}}
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>{{localize "LOADING_SCREEN.Custom.CameraZoom"}}</label>
+          <div class="form-fields">
+            <select name="camera.zoom">
+              {{selectOptions labels.zooms selected=current.camera.zoom localize=true}}
+            </select>
+            <input type="number" class="ls-cs-scale" name="camera.scale" value="{{current.camera.scale}}" min="0.05"
+                   max="5" step="0.05" aria-label="{{localize "LOADING_SCREEN.Custom.CameraScale"}}"
+                   data-tooltip="LOADING_SCREEN.Custom.CameraScale">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>{{localize "LOADING_SCREEN.Custom.CameraDuration"}}</label>
+          <div class="form-fields">
+            <input type="number" name="camera.duration" value="{{current.camera.duration}}" min="0.5" max="600"
+                   step="0.5">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>{{localize "LOADING_SCREEN.Custom.CameraEasing"}}</label>
+          <div class="form-fields">
+            <select name="camera.easing">
+              {{selectOptions labels.easings selected=current.camera.easing localize=true}}
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>{{localize "LOADING_SCREEN.Custom.InterfaceDelay"}}</label>
+        <div class="form-fields">
+          <input type="number" name="interfaceDelay" value="{{current.interfaceDelay}}" min="0" max="600" step="0.5">
+        </div>
+        <p class="hint">{{localize "LOADING_SCREEN.Custom.InterfaceDelayHint"}}</p>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>{{localize "LOADING_SCREEN.Custom.InterfaceLegend"}}</legend>
+      <div class="form-group">
+        <label>{{localize "LOADING_SCREEN.Custom.HideInterface"}}</label>
+        <div class="form-fields">
+          <input type="checkbox" name="hideInterface" {{checked current.hideInterface}}>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset class="ls-cs-macros">
+      <legend>{{localize "LOADING_SCREEN.Custom.MacrosLegend"}}</legend>
+      {{#if current.macros.length}}
+      <div class="ls-cs-macro ls-cs-macro-head" aria-hidden="true">
+        <span>{{localize "DOCUMENT.Macro"}}</span>
+        <span>{{localize "LOADING_SCREEN.Custom.MacroWhen"}}</span>
+        <span>{{localize "LOADING_SCREEN.Custom.MacroDelay"}}</span>
+        <span></span>
+      </div>
+      {{/if}}
+      {{#each current.macros}}
+      <div class="ls-cs-macro">
+        <select name="macros.{{@index}}.uuid" aria-label="{{localize "DOCUMENT.Macro"}}">
+          {{selectOptions @root.macroChoices selected=uuid blank=(localize "LOADING_SCREEN.Custom.MacroNone")}}
+        </select>
+        <select name="macros.{{@index}}.when" aria-label="{{localize "LOADING_SCREEN.Custom.MacroWhen"}}">
+          {{selectOptions @root.labels.moments selected=when localize=true}}
+        </select>
+        <input type="number" name="macros.{{@index}}.delay" value="{{delay}}" min="0" max="600" step="0.5"
+               aria-label="{{localize "LOADING_SCREEN.Custom.MacroDelay"}}">
+        <button type="button" class="icon" data-action="removeMacro" data-index="{{@index}}"
+                data-tooltip="LOADING_SCREEN.Custom.MacroRemove" aria-label="{{localize "LOADING_SCREEN.Custom.MacroRemove"}}">
+          <i class="fa-solid fa-xmark" inert></i>
+        </button>
+      </div>
+      {{/each}}
+      <button type="button" class="ls-cs-add" data-action="addMacro">
+        <i class="fa-solid fa-plus" inert></i> {{localize "LOADING_SCREEN.Custom.MacroAdd"}}
+      </button>
+    </fieldset>
+    {{/if}}
+  </section>
+</div>

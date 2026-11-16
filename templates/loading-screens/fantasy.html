@@ -1,0 +1,44 @@
+<!-- Fantasy/RPG Loading Screen Template (fork: backgrounds filled by script, tips anchored to the bottom) -->
+<div id="loading-screen-overlay" class="loading-template-fantasy">
+  <div class="ls-backgrounds"></div>
+  <div class="fantasy-border-overlay"></div>
+  <div class="loading-screen-content fantasy-content">
+    <div class="fantasy-scroll">
+      {{#if customText}}
+      <div class="fantasy-header">
+        <span class="fantasy-ornament">&#9876;</span>
+        <h1 class="fantasy-title">{{customText}}</h1>
+        <span class="fantasy-ornament">&#9876;</span>
+      </div>
+      {{/if}}
+      {{#if sceneName}}
+      <div class="fantasy-location">
+        <span class="location-label">{{labels.entering}}</span>
+        <span class="location-name">{{sceneName}}</span>
+      </div>
+      {{/if}}
+      {{#if showProgress}}
+      <div class="fantasy-progress">
+        <div class="fantasy-progress-bar">
+          <div class="fantasy-progress-fill" id="loading-progress-fill"></div>
+        </div>
+        <div class="fantasy-progress-corners">
+          <span class="corner top-left">&#9670;</span>
+          <span class="corner top-right">&#9670;</span>
+          <span class="corner bottom-left">&#9670;</span>
+          <span class="corner bottom-right">&#9670;</span>
+        </div>
+      </div>
+      {{/if}}
+    </div>
+  </div>
+  {{#if showTips}}
+  <footer class="ls-tips">
+    <div class="ls-tip">
+      <span class="ls-tip-label">&#10022; {{labels.tips}} &#10022;</span>
+      <p id="loading-tip-text" class="ls-tip-text">{{currentTip}}</p>
+    </div>
+  </footer>
+  {{/if}}
+  <div class="ls-skip-hint">{{labels.skip}}</div>
+</div>

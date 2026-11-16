@@ -1,0 +1,625 @@
+/**
+ * Loading Screen System Styles
+ * Fork notice (Apache-2.0 §4b): modified in 2026. Tips live in a bar anchored to the bottom of the screen, backgrounds
+ * crossfade between two layers, keyframes are namespaced, and the palette is muted (no glow).
+ */
+
+/* ============================================
+   OVERLAY
+   ============================================ */
+
+#loading-screen-overlay {
+  --ls-accent: #a8946a;
+  --ls-accent-dark: #5f5240;
+  --ls-text: #ebe5d9;
+  --ls-text-dim: rgba(235, 229, 217, 0.72);
+  --ls-panel: rgba(12, 10, 9, 0.66);
+  --ls-border: rgba(235, 229, 217, 0.14);
+  --ls-tips-bottom: clamp(1.25rem, 5vh, 3.5rem);
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #050403;
+  color: var(--ls-text);
+  font-family: "Signika", "Palatino Linotype", serif;
+  user-select: none;
+  animation: ls-fade-in var(--fade-duration, 0.5s) ease-in both;
+}
+
+#loading-screen-overlay.fade-out {
+  animation: ls-fade-out var(--fade-duration, 0.5s) ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes ls-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes ls-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* Backgrounds: two layers crossfade when the image changes */
+#loading-screen-overlay .ls-backgrounds {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+#loading-screen-overlay .ls-bg {
+  position: absolute;
+  inset: -2%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity var(--image-fade, 1.2s) ease-in-out;
+}
+
+#loading-screen-overlay .ls-bg.active {
+  opacity: 1;
+}
+
+#loading-screen-overlay .ls-bg .ls-media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Shade behind the tips so they stay readable on bright images */
+#loading-screen-overlay .ls-shade {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 40%;
+  z-index: 1;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.55), transparent);
+  pointer-events: none;
+}
+
+#loading-screen-overlay .loading-screen-content {
+  position: relative;
+  z-index: 3;
+  width: 80%;
+  max-width: 800px;
+  text-align: center;
+  color: var(--ls-text);
+}
+
+/* Click hint, shown once the scene is ready while a minimum display time is pending */
+#loading-screen-overlay .ls-skip-hint {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.5rem;
+  z-index: 5;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  color: var(--ls-text-dim);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+#loading-screen-overlay.ls-skippable.ls-ready:not(.fade-out) .ls-skip-hint {
+  opacity: 1;
+}
+
+#loading-screen-overlay.ls-ready {
+  cursor: pointer;
+}
+
+/* ============================================
+   TIPS (bottom of the screen, every design)
+   ============================================ */
+
+#loading-screen-overlay .ls-tips {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: var(--ls-tips-bottom);
+  z-index: 4;
+  display: flex;
+  justify-content: center;
+  padding: 0 4vw;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+#loading-screen-overlay .ls-tip {
+  box-sizing: border-box;
+  width: min(52rem, 100%);
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin: 0;
+  padding: 0.85rem 1.25rem;
+  background: var(--ls-panel);
+  border: 1px solid var(--ls-border);
+  border-radius: 8px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
+}
+
+#loading-screen-overlay .ls-tip-icon {
+  flex: none;
+  width: 1.25rem;
+  font-size: 1.1rem;
+  text-align: center;
+  color: var(--ls-accent);
+  opacity: 0.85;
+}
+
+#loading-screen-overlay .ls-tip-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  text-align: left;
+  color: var(--ls-text);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  overflow-wrap: anywhere;
+  transition: opacity 0.35s ease;
+}
+
+#loading-screen-overlay .ls-tip-text.ls-tip-hidden {
+  opacity: 0;
+}
+
+#loading-screen-overlay .ls-tip-label {
+  display: block;
+}
+
+/* ============================================
+   STANDARD
+   ============================================ */
+
+#loading-screen-overlay.loading-template-standard .ls-bg {
+  filter: brightness(0.6) blur(2px);
+}
+
+#loading-screen-overlay.loading-template-standard .loading-screen-text h1 {
+  margin: 0;
+  font-size: 3rem;
+  font-weight: bold;
+  color: var(--ls-text);
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+  font-family: "Signika", "Palatino Linotype", serif;
+  border: none;
+  animation: ls-pulse 2.4s ease-in-out infinite;
+}
+
+#loading-screen-overlay.loading-template-standard .loading-screen-text .scene-name {
+  margin: 1rem 0 2rem 0;
+  font-size: 1.5rem;
+  color: var(--ls-text);
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+#loading-screen-overlay.loading-template-standard .loading-screen-progress {
+  margin-top: 2rem;
+  width: 100%;
+}
+
+#loading-screen-overlay.loading-template-standard .progress-bar {
+  width: 100%;
+  height: 12px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(235, 229, 217, 0.2);
+  border-radius: 6px;
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.5);
+}
+
+#loading-screen-overlay.loading-template-standard .progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--ls-accent-dark) 0%, var(--ls-accent) 50%, var(--ls-accent-dark) 100%);
+  background-size: 200% 100%;
+  animation: ls-shimmer 3s linear infinite;
+  transition: width 0.3s ease-out;
+  border-radius: 5px;
+}
+
+@keyframes ls-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes ls-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+/* ============================================
+   MINIMALIST
+   ============================================ */
+
+#loading-screen-overlay.loading-template-minimalist {
+  background: #050505;
+}
+
+#loading-screen-overlay.loading-template-minimalist .ls-bg {
+  filter: blur(5px) grayscale(50%);
+}
+
+#loading-screen-overlay.loading-template-minimalist .ls-bg.active {
+  opacity: 0.3;
+}
+
+#loading-screen-overlay.loading-template-minimalist .minimalist-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#loading-screen-overlay.loading-template-minimalist .minimalist-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#loading-screen-overlay.loading-template-minimalist .minimalist-text h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--ls-text);
+  border: none;
+}
+
+#loading-screen-overlay.loading-template-minimalist .minimalist-progress {
+  position: relative;
+  width: 300px;
+  height: 2px;
+  margin-top: 2rem;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+#loading-screen-overlay.loading-template-minimalist .minimalist-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: rgba(235, 229, 217, 0.9);
+  transition: width 0.3s ease-out;
+}
+
+#loading-screen-overlay.loading-template-minimalist .ls-tip {
+  justify-content: center;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+#loading-screen-overlay.loading-template-minimalist .ls-tip-text {
+  flex: 0 1 auto;
+  font-size: 0.95rem;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  text-align: center;
+  color: var(--ls-text-dim);
+}
+
+/* ============================================
+   CINEMATIC
+   ============================================ */
+
+#loading-screen-overlay.loading-template-cinematic {
+  background: #000;
+}
+
+#loading-screen-overlay.loading-template-cinematic .ls-bg {
+  filter: brightness(0.4) contrast(1.2);
+}
+
+#loading-screen-overlay.loading-template-cinematic .cinematic-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.8) 100%);
+}
+
+#loading-screen-overlay.loading-template-cinematic .cinematic-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  box-shadow: inset 0 0 150px 50px rgba(0, 0, 0, 0.8);
+  pointer-events: none;
+}
+
+#loading-screen-overlay.loading-template-cinematic .cinematic-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+#loading-screen-overlay.loading-template-cinematic .cinematic-header {
+  text-align: center;
+}
+
+#loading-screen-overlay.loading-template-cinematic .cinematic-title {
+  margin-bottom: 1rem;
+  font-size: 3.5rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ls-text);
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
+}
+
+#loading-screen-overlay.loading-template-cinematic .cinematic-subtitle {
+  font-size: 1.5rem;
+  font-weight: 300;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ls-text-dim);
+}
+
+#loading-screen-overlay.loading-template-cinematic .cinematic-progress {
+  width: min(400px, 80vw);
+}
+
+#loading-screen-overlay.loading-template-cinematic .cinematic-progress-track {
+  height: 4px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+#loading-screen-overlay.loading-template-cinematic .cinematic-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #d8d2c6 0%, #8f897e 100%);
+  transition: width 0.3s ease-out;
+}
+
+#loading-screen-overlay.loading-template-cinematic .ls-tip {
+  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.6) 12%, rgba(0, 0, 0, 0.6) 88%, transparent);
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  justify-content: center;
+}
+
+#loading-screen-overlay.loading-template-cinematic .ls-tip-text {
+  flex: 0 1 auto;
+  font-size: 1rem;
+  font-style: italic;
+  text-align: center;
+  color: var(--ls-text-dim);
+}
+
+/* ============================================
+   FANTASY / RPG
+   ============================================ */
+
+#loading-screen-overlay.loading-template-fantasy {
+  background: #1a0f0a;
+}
+
+#loading-screen-overlay.loading-template-fantasy .ls-bg {
+  filter: brightness(0.5) sepia(30%);
+}
+
+#loading-screen-overlay.loading-template-fantasy .fantasy-border-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border: 20px solid;
+  border-image: linear-gradient(45deg, rgba(110, 72, 40, 0.6), rgba(180, 158, 120, 0.7), rgba(110, 72, 40, 0.6)) 1;
+  pointer-events: none;
+}
+
+#loading-screen-overlay.loading-template-fantasy .fantasy-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#loading-screen-overlay.loading-template-fantasy .fantasy-scroll {
+  position: relative;
+  max-width: 600px;
+  padding: 3rem;
+  background: rgba(232, 222, 198, 0.95);
+  border: 3px solid #6b4a2b;
+  border-radius: 8px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(107, 74, 43, 0.2);
+}
+
+#loading-screen-overlay.loading-template-fantasy .fantasy-scroll::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(107, 74, 43, 0.03) 2px,
+    rgba(107, 74, 43, 0.03) 4px);
+  pointer-events: none;
+}
+
+#loading-screen-overlay.loading-template-fantasy .fantasy-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+#loading-screen-overlay.loading-template-fantasy .fantasy-ornament {
+  font-size: 1.5rem;
+  color: #6b4a2b;
+}
+
+#loading-screen-overlay.loading-template-fantasy .fantasy-title {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  color: #4a2a14;
+  border: none;
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  text-shadow: 1px 1px 0 rgba(107, 74, 43, 0.2);
+}
+
+#loading-screen-overlay.loading-template-fantasy .fantasy-location {
+  margin-bottom: 2rem;
+  text-align: center;
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+}
+
+#loading-screen-overlay.loading-template-fantasy .location-label {
+  font-size: 0.9rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #6b4a2b;
+}
+
+#loading-screen-overlay.loading-template-fantasy .location-name {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2c1810;
+}
+
+#loading-screen-overlay.loading-template-fantasy .fantasy-progress {
+  position: relative;
+  margin: 2rem 0 0;
+}
+
+#loading-screen-overlay.loading-template-fantasy .fantasy-progress-bar {
+  height: 12px;
+  overflow: hidden;
+  background: rgba(107, 74, 43, 0.2);
+  border: 2px solid #6b4a2b;
+  border-radius: 6px;
+}
+
+#loading-screen-overlay.loading-template-fantasy .fantasy-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #6b4a2b 0%, #b8956a 50%, #6b4a2b 100%);
+  transition: width 0.3s ease-out;
+}
+
+#loading-screen-overlay.loading-template-fantasy .fantasy-progress-corners {
+  position: absolute;
+  inset: -5px;
+}
+
+#loading-screen-overlay.loading-template-fantasy .fantasy-progress-corners .corner {
+  position: absolute;
+  font-size: 0.8rem;
+  color: #6b4a2b;
+}
+
+#loading-screen-overlay.loading-template-fantasy .fantasy-progress-corners .top-left { top: 0; left: 0; }
+#loading-screen-overlay.loading-template-fantasy .fantasy-progress-corners .top-right { top: 0; right: 0; }
+#loading-screen-overlay.loading-template-fantasy .fantasy-progress-corners .bottom-left { bottom: 0; left: 0; }
+#loading-screen-overlay.loading-template-fantasy .fantasy-progress-corners .bottom-right { bottom: 0; right: 0; }
+
+#loading-screen-overlay.loading-template-fantasy .ls-tip {
+  width: min(44rem, 100%);
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.9rem 1.5rem 1rem;
+  background: rgba(232, 222, 198, 0.95);
+  border: 2px solid #6b4a2b;
+  border-radius: 6px;
+  backdrop-filter: none;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.7), inset 0 0 14px rgba(107, 74, 43, 0.2);
+}
+
+#loading-screen-overlay.loading-template-fantasy .ls-tip-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #6b4a2b;
+}
+
+#loading-screen-overlay.loading-template-fantasy .ls-tip-text {
+  font-size: 1rem;
+  font-style: italic;
+  text-align: center;
+  color: #3b2414;
+  text-shadow: none;
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+}
+
+/* ============================================
+   NOTIFICATIONS DURING LOADING
+   ============================================ */
+
+body.ls-block-notifications #notifications .notification.info {
+  display: none !important;
+}
+
+/* ============================================
+   RESPONSIVE AND MOTION
+   ============================================ */
+
+@media (max-width: 768px) {
+  #loading-screen-overlay .loading-screen-content { width: 90%; }
+  #loading-screen-overlay.loading-template-standard .loading-screen-text h1 { font-size: 2rem; }
+  #loading-screen-overlay.loading-template-standard .loading-screen-text .scene-name { font-size: 1.2rem; }
+  #loading-screen-overlay.loading-template-cinematic .cinematic-title { font-size: 2.2rem; }
+  #loading-screen-overlay.loading-template-minimalist .minimalist-text h1 { font-size: 1.8rem; }
+  #loading-screen-overlay .ls-tip-text { font-size: 0.95rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #loading-screen-overlay .loading-screen-text h1,
+  #loading-screen-overlay .progress-fill { animation: none; }
+  #loading-screen-overlay .ls-bg { transition-duration: 0.01s; }
+}
+
+/* ============================================
+   CONFIGURATION WINDOWS
+   ============================================ */
+
+.scene-config .tab[data-tab="loadingScreen"] .form-group.ls-disabled {
+  opacity: 0.55;
+}
+
+.loading-screen-tips-config .window-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.loading-screen-tips-config .ls-tips-editor {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  gap: 0.5rem;
+}
+
+.loading-screen-tips-config textarea[name="customTips"] {
+  flex: 1;
+  width: 100%;
+  min-height: 260px;
+  resize: none;
+  font-family: var(--font-monospace, monospace);
+  line-height: 1.45;
+}
+
+.loading-screen-tips-config .ls-tip-count {
+  float: right;
+  opacity: 0.8;
+}
