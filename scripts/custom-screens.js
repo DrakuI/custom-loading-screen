@@ -10,7 +10,7 @@
  * everyone is forwarded to it when the screen ends. Escape or the stop button interrupts everything.
  */
 
-import {MediaSegment, isVideo, parseTime} from "./compat.js?v=20261111c";
+import {MediaSegment, isVideo, parseTime} from "./compat.js?v=20261124c";
 
 const MODULE_ID = "custom-loading-screen";
 

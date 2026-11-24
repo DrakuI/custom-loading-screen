@@ -16,10 +16,11 @@
 
 import {tips_en} from "./tips-en.js";
 import {CustomTipsConfig, LoadingScreenPreview} from "./config.js";
-import {CustomScreensConfig} from "./custom-screens-config.js?v=20261111c";
-import {CustomScreens, CustomSession, PLAY_SETTING, SCREENS_SETTING, normalizeScreen} from "./custom-screens.js?v=20261111c";
+import {CustomScreensConfig} from "./custom-screens-config.js?v=20261124c";
+import {CustomScreens, CustomSession, PLAY_SETTING, SCREENS_SETTING, normalizeScreen} from "./custom-screens.js?v=20261124c";
 import {registerSceneConfigTab} from "./scene-config.js";
-import {MediaSegment, fadeAudio, resolveMedia, isVideo, ShuffleBag} from "./compat.js?v=20261111c";
+import {onRenderSettingsConfig} from "./support.js?v=20261124c";
+import {MediaSegment, fadeAudio, resolveMedia, isVideo, ShuffleBag} from "./compat.js?v=20261124c";
 
 const MODULE_ID = "custom-loading-screen";
 
@@ -28,7 +29,7 @@ const MODULE_ID = "custom-loading-screen";
  * cache module files load the current ones. The import statements repeat it; every importer of a file must use the
  * same URL, or the file would load twice.
  */
-const ASSET_VERSION = "20261111c";
+const ASSET_VERSION = "20261124c";
 
 /** Template paths by design name. */
 const TEMPLATES = Object.freeze({
@@ -1315,6 +1316,8 @@ Hooks.once("init", () => {
     };
   }
 });
+
+Hooks.on("renderSettingsConfig", onRenderSettingsConfig);
 
 Hooks.once("ready", () => {
   LoadingScreenManager.refreshCache().catch(err => console.warn("Loading Screen | Cache refresh failed", err));

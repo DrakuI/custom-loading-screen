@@ -10,9 +10,10 @@
 import {
   ANCHORS, CustomScreens, EASINGS, IMAGE_SECONDS, MOMENTS, MUSIC_ENDS, ZOOMS, forwards, mediaKind, normalizeScreen,
   timelineOf
-} from "./custom-screens.js?v=20261111c";
-import {formatTime, isVideo} from "./compat.js?v=20261111c";
-import {TrimBar, renderTimeline} from "./custom-screens-trim.js?v=20261111c";
+} from "./custom-screens.js?v=20261124c";
+import {formatTime, isVideo} from "./compat.js?v=20261124c";
+import {TrimBar, renderTimeline} from "./custom-screens-trim.js?v=20261124c";
+import {betaNotice, pageLinks} from "./support.js?v=20261124c";
 
 const MODULE_ID = "custom-loading-screen";
 const {ApplicationV2, HandlebarsApplicationMixin, DialogV2} = foundry.applications.api;
@@ -140,9 +141,25 @@ export class CustomScreensConfig extends HandlebarsApplicationMixin(ApplicationV
 
   /* -------------------------------------------- */
 
+  /**
+   * Add the strip with the author's pages and the beta notice under the buttons. It is no part of the window, so it
+   * stays through later renders.
+   */
+  #addSupport() {
+    const content = this.element.querySelector(".window-content");
+    if ( !content || content.querySelector(":scope > .ls-support") ) return;
+    const strip = document.createElement("footer");
+    strip.className = "ls-support";
+    strip.append(pageLinks({names: true}), betaNotice());
+    content.append(strip);
+  }
+
+  /* -------------------------------------------- */
+
   /** @inheritDoc */
   async _onRender(context, options) {
     await super._onRender(context, options);
+    this.#addSupport();
     this.#destroyBars();
     this.#lengths = {media: NaN, music: NaN};
     const form = this.element;

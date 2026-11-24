@@ -87,6 +87,9 @@
     "SceneScreen": "Screen for this Scene",
     "SceneScreenDefault": "Module default screen",
     "SceneScreenHint": "A custom screen replaces the images and music below.",
+    "Support": {
+      "Beta": "Beta of the next version: free on Patreon"
+    },
     "Custom": {
       "Menu": "Custom Screens",
       "MenuHint": "Cinematic sequences of a video, image or black screen, music, and camera move over the scene.",

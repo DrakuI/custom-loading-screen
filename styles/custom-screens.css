@@ -578,3 +578,119 @@ body.ls-cine-ui-back :is(#ui-left, #ui-middle, #ui-right, #visual-active-effects
   font-variant-numeric: tabular-nums;
   opacity: 0.6;
 }
+
+/* ============================================
+   AUTHOR'S PAGES AND BETA NOTICE
+   ============================================ */
+
+/* The title the module gives its own section of Configure Settings when it has none. */
+.ls-settings-title {
+  display: flex;
+  align-items: center;
+}
+
+/* Beside the module's title in Configure Settings, and in the strip under the buttons of the custom screens window.
+   Colors come from the text color, so they follow any theme. */
+.ls-pages {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-left: 0.6rem;
+  vertical-align: middle;
+}
+
+.ls-page {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  box-sizing: border-box;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  padding: 0 0.3rem;
+  border: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+  border-radius: 999px;
+  color: inherit;
+  font-family: var(--font-body, sans-serif);
+  font-size: 0.75rem;
+  font-weight: normal;
+  line-height: 1;
+  text-decoration: none;
+  text-shadow: none;
+  opacity: 0.85;
+}
+
+.ls-page:hover {
+  color: #fff;
+  text-shadow: none;
+  opacity: 1;
+}
+
+.ls-page-patreon:hover {
+  border-color: #f96854;
+  background: #f96854;
+}
+
+.ls-page-discord:hover {
+  border-color: #5865f2;
+  background: #5865f2;
+}
+
+.ls-beta {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45em;
+  color: inherit;
+  text-decoration: none;
+}
+
+.ls-beta:hover {
+  text-decoration: underline;
+}
+
+.ls-beta i {
+  color: #f96854;
+}
+
+/* The notice with the link to the page at its end. */
+.ls-beta-notice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.75rem;
+  margin: 0.25rem 0 0.75rem;
+  padding: 0.4rem 0.6rem;
+  border-left: 2px solid #f96854;
+  background: color-mix(in srgb, currentColor 7%, transparent);
+  font-size: var(--font-size-13, 13px);
+  line-height: 1.35;
+}
+
+.ls-beta-notice .ls-page {
+  flex: none;
+  margin-left: auto;
+  padding: 0 0.6rem;
+}
+
+.loading-screen-custom-screens .ls-support {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.4rem 0.75rem;
+  border-top: 1px solid var(--ls-cs-line);
+  font-size: 0.8rem;
+}
+
+.loading-screen-custom-screens .ls-support .ls-pages {
+  margin-left: 0;
+}
+
+.loading-screen-custom-screens .ls-support .ls-page {
+  padding: 0 0.6rem;
+}
+
+.loading-screen-custom-screens .ls-support .ls-beta {
+  margin-left: auto;
+  opacity: 0.9;
+}

@@ -7,7 +7,7 @@
  * a custom screen happens.
  */
 
-import {MediaSegment, formatTime, parseTime, whenMetadata} from "./compat.js?v=20261111c";
+import {MediaSegment, formatTime, parseTime, whenMetadata} from "./compat.js?v=20261124c";
 
 /** Shortest segment the handles allow, in seconds. */
 const MIN_SEGMENT = 0.5;
